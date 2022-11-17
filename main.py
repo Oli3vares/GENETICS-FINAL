@@ -17,9 +17,91 @@ def read_str(ind, list):
     else:
         return
 
+def calculate_function(root, x_value):
+    "No sé si hay que tener en cuenta la jerarquía de las operaciones (creo que no hace falta)"
+    if root.value in operator:
+        return operator[root.value](root.left, root.right, x_value)
+    else:
+        if type(root.value) == int:
+            return root.value
+        else:
+            return x_value
+
+def multiplication(arg1, arg2, x_value):
+    if arg1.value in operator.keys():
+        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
+    else:
+        if arg1.value != 'x':
+            value1 = int(arg1.value)
+        else:
+            value1 = x_value
+    if arg2.value in operator.keys():
+        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
+    else:
+        if arg2.value != 'x':
+            value2 = int(arg2.value)
+        else:
+            value2 = x_value
+    print("Multiplication:", value1, value2)
+    return value1*value2
+
+def addition(arg1, arg2, x_value):
+    if arg1.value in operator.keys():
+        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
+    else:
+        if arg1.value != 'x':
+            value1 = int(arg1.value)
+        else:
+            value1 = x_value
+    if arg2.value in operator.keys():
+        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
+    else:
+        if arg2.value != 'x':
+            value2 = int(arg2.value)
+        else:
+            value2 = x_value
+    print("Addition:", value1, value2)
+    return value1+value2
+
+def substraction(arg1, arg2, x_value):
+    if arg1.value in operator.keys():
+        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
+    else:
+        if arg1.value != 'x':
+            value1 = int(arg1.value)
+        else:
+            value1 = x_value
+    if arg2.value in operator.keys():
+        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
+    else:
+        if arg2.value != 'x':
+            value2 = int(arg2.value)
+        else:
+            value2 = x_value
+    print("Substraction:", value1, value2)
+    return value1-value2
+
+def division(arg1, arg2, x_value):
+    if arg1.value in operator.keys():
+        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
+    else:
+        if arg1.value != 'x':
+            value1 = int(arg1.value)
+        else:
+            value1 = x_value
+    if arg2.value in operator.keys():
+        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
+    else:
+        if arg2.value != 'x':
+            value2 = int(arg2.value)
+        else:
+            value2 = x_value
+    print("Division:", value1, value2)
+    return value1/value2
+
 class Node:
     def __init__(self, value):
-        self.data = value
+        self.value = value
         self.left = None
         self.right = None
 
@@ -37,35 +119,13 @@ class Tree:
         else:
             root.right = self.create_node(node)
 
-operator = ["+", "-", "*", "/"]
-ind = "+a/b2"
+operator = {"+": addition, "-": substraction, "*": multiplication, "/": division}
+ind = "+x+/x23"
 root = Node(ind[0])
 tree = Tree(root, ind)
+
 if ind[0] in operator:
     operator_list = [root]
     read_str(ind[1:], operator_list)
 
-def calculate_function(root, x_value):
-    "No sé si hay que tener en cuenta la jerarquía de las operaciones (creo que no hace falta)"
-    if root.value in operator:
-        if root.value == "*":
-            return multiplication(root.right, root.left, x_value)
-    else:
-        if type(root.value) == int:
-            return root.value
-        else:
-            return x_value
-
-def multiplication(arg1, arg2, x_value):
-    if arg1.value is in operator:
-        "Los ifs"
-        value1 = ...
-    else:
-        value1 = ...
-    if arg2.value is in operator:
-        value2 = ...
-    else:
-        value2 = ...
-    return value1*value2
-
-
+print(calculate_function(root, 1))
