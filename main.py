@@ -129,7 +129,3 @@ if ind[0] in operator:
     read_str(ind[1:], operator_list)
 
 print(calculate_function(root, 1))
-
-
-
-2+x*3
