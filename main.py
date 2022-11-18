@@ -27,7 +27,8 @@ def calculate_function(root, x_value):
         else:
             return x_value
 
-def multiplication(arg1, arg2, x_value):
+
+def get_values(arg1, arg2, x_value):
     if arg1.value in operator.keys():
         value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
     else:
@@ -42,62 +43,26 @@ def multiplication(arg1, arg2, x_value):
             value2 = int(arg2.value)
         else:
             value2 = x_value
+    return value1, value2
+def multiplication(arg1, arg2, x_value):
+    values = get_values(arg1, arg2, x_value)
     #print("Multiplication:", value1, value2)
-    return value1*value2
+    return values[0]*values[1]
 
 def addition(arg1, arg2, x_value):
-    if arg1.value in operator.keys():
-        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
-    else:
-        if arg1.value != 'x':
-            value1 = int(arg1.value)
-        else:
-            value1 = x_value
-    if arg2.value in operator.keys():
-        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
-    else:
-        if arg2.value != 'x':
-            value2 = int(arg2.value)
-        else:
-            value2 = x_value
+    values = get_values(arg1, arg2, x_value)
     #print("Addition:", value1, value2)
-    return value1+value2
+    return values[0]+values[1]
 
 def substraction(arg1, arg2, x_value):
-    if arg1.value in operator.keys():
-        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
-    else:
-        if arg1.value != 'x':
-            value1 = int(arg1.value)
-        else:
-            value1 = x_value
-    if arg2.value in operator.keys():
-        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
-    else:
-        if arg2.value != 'x':
-            value2 = int(arg2.value)
-        else:
-            value2 = x_value
+    values = get_values(arg1, arg2, x_value)
     #print("Substraction:", value1, value2)
-    return value1-value2
+    return values[0]-values[1]
 
 def division(arg1, arg2, x_value):
-    if arg1.value in operator.keys():
-        value1 = operator[arg1.value](arg1.left, arg1.right, x_value)
-    else:
-        if arg1.value != 'x':
-            value1 = int(arg1.value)
-        else:
-            value1 = x_value
-    if arg2.value in operator.keys():
-        value2 = operator[arg2.value](arg2.left, arg2.right, x_value)
-    else:
-        if arg2.value != 'x':
-            value2 = int(arg2.value)
-        else:
-            value2 = x_value
+    values = get_values(arg1, arg2, x_value)
     #print("Division:", value1, value2)
-    return value1/value2
+    return values[0]/values[1]
 
 class Node:
     def __init__(self, value):
@@ -122,7 +87,7 @@ class Tree:
 operator = {"+": addition, "-": substraction, "*": multiplication, "/": division}
 
 list_values = []
-file = open('function4.csv',newline='')
+file = open('function1.csv',newline='')
 reader = csv.reader(file)
 
 for row in reader:
