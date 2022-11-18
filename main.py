@@ -58,16 +58,16 @@ def get_values(arg1, arg2, x_value):
     if arg1.value in operator_two.keys():
         value1 = operator_two[arg1.value](arg1.left, arg1.right, x_value)
     elif arg1.value in operator_one.keys():
-        return operator_one[arg1.value](root.left, x_value)
+        return operator_one[arg1.value](arg1.left, x_value)
     else:
         if arg1.value != 'x':
             value1 = int(arg1.value)
         else:
             value1 = x_value
     if arg2.value in operator_two.keys():
-        value2 = operator_two[arg1.value](arg1.left, arg1.right, x_value)
+        value2 = operator_two[arg2.value](arg2.left, arg2.right, x_value)
     elif arg2.value in operator_one.keys():
-        value2 = operator_one[arg1.value](root.left, x_value)
+        value2 = operator_one[arg2.value](arg2.left, x_value)
     else:
         if arg2.value != 'x':
             value2 = int(arg2.value)
