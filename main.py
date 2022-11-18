@@ -12,7 +12,7 @@ def read_str(ind, list):
         if ind[i+1] in operator:
             new_operator_list.append(list[int((i)/2)].right)
     if len(new_operator_list) != 0:
-        print("New depth")
+        #print("New depth")
         read_str(ind[2*len(list):], new_operator_list)
     else:
         return
@@ -42,7 +42,7 @@ def multiplication(arg1, arg2, x_value):
             value2 = int(arg2.value)
         else:
             value2 = x_value
-    print("Multiplication:", value1, value2)
+    #print("Multiplication:", value1, value2)
     return value1*value2
 
 def addition(arg1, arg2, x_value):
@@ -60,7 +60,7 @@ def addition(arg1, arg2, x_value):
             value2 = int(arg2.value)
         else:
             value2 = x_value
-    print("Addition:", value1, value2)
+    #print("Addition:", value1, value2)
     return value1+value2
 
 def substraction(arg1, arg2, x_value):
@@ -78,7 +78,7 @@ def substraction(arg1, arg2, x_value):
             value2 = int(arg2.value)
         else:
             value2 = x_value
-    print("Substraction:", value1, value2)
+    #print("Substraction:", value1, value2)
     return value1-value2
 
 def division(arg1, arg2, x_value):
@@ -96,7 +96,7 @@ def division(arg1, arg2, x_value):
             value2 = int(arg2.value)
         else:
             value2 = x_value
-    print("Division:", value1, value2)
+    #print("Division:", value1, value2)
     return value1/value2
 
 class Node:
@@ -120,12 +120,29 @@ class Tree:
             root.right = self.create_node(node)
 
 operator = {"+": addition, "-": substraction, "*": multiplication, "/": division}
-ind = "+x+/x23"
-root = Node(ind[0])
-tree = Tree(root, ind)
 
-if ind[0] in operator:
+list_values = []
+file = open('function1.csv',newline='')
+reader = csv.reader(file)
+
+for row in reader:
+    if row != []:
+        list_values.append(row)
+
+print(list_values)
+
+ind = "+x+/x*23"
+ind2 = "20+x/x/10+x"
+root = Node(ind2[0])
+tree = Tree(root, ind2)
+
+if ind2[0] in operator:
     operator_list = [root]
-    read_str(ind[1:], operator_list)
+    read_str(ind2[1:], operator_list)
 
-print(calculate_function(root, 1))
+results = []
+for i in list_values[2:]:
+    new_y = calculate_function(root, float(i[0]))
+    results.append(abs(float(i[1]) - new_y)) #Se inserta la diferencia entre y y el valor obtenido con la funcion
+
+print(results)

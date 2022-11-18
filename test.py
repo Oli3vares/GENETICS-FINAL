@@ -26,6 +26,8 @@ for i in results:
     data.append(i[0])
     data.append(i[1])
     writer.writerow(data)
+
+print(list_values)
 file.close()
 
 
