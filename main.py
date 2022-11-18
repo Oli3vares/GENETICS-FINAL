@@ -122,17 +122,16 @@ class Tree:
 operator = {"+": addition, "-": substraction, "*": multiplication, "/": division}
 
 list_values = []
-file = open('function1.csv',newline='')
+file = open('function4.csv',newline='')
 reader = csv.reader(file)
 
 for row in reader:
-    if row != []:
+    if row != []: #Sacamos del CSV los valores necesarios
         list_values.append(row)
 
 print(list_values)
 
-ind = "+x+/x*23"
-ind2 = "20+x/x/10+x"
+ind2 = list_values[1][0]
 root = Node(ind2[0])
 tree = Tree(root, ind2)
 
@@ -143,6 +142,5 @@ if ind2[0] in operator:
 results = []
 for i in list_values[2:]:
     new_y = calculate_function(root, float(i[0]))
-    results.append(abs(float(i[1]) - new_y)) #Se inserta la diferencia entre y y el valor obtenido con la funcion
-
-print(results)
+    if float(i[1]) != new_y:
+        print("Mal")

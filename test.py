@@ -3,10 +3,11 @@ import random
 list_values = []
 
 def calculate_value(value):
-    return value/(2*(value-3)+9)
+
+    return (7+2*value)/(3-(6*value+4*(5/value)))
 
 for i in range (100):
-    number = random.random()*random.randint(0, 100000)
+    number = random.random()*random.randint(-50000, 100000)
     if number != 3:
         list_values.append(number)
 
@@ -16,11 +17,11 @@ for i in list_values:
     result = calculate_value(i)
     results.append([i, result])
 print(results)
-file = open('function1.csv', 'a')
+file = open('function4.csv', 'a')
 writer = csv.writer(file)
 data = ["X_VALUE", "Y_VALUE"]
 writer.writerow(data)
-writer.writerow(["/x+*92-x3"])
+writer.writerow(["/+-7*3+2x**6x4/5x"])
 for i in results:
     data = []
     data.append(i[0])
