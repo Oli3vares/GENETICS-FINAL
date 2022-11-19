@@ -1,4 +1,7 @@
 import csv
+import math
+
+
 def read_str(ind, list, num_children):
     new_operator_list = []
     children = 0
@@ -74,6 +77,18 @@ def get_values(arg1, arg2, x_value):
         else:
             value2 = x_value
     return value1, value2
+
+def get_value(arg1, x_value):
+    if arg1.value in operator_two.keys():
+        value1 = operator_two[arg1.value](arg1.left, arg1.right, x_value)
+    elif arg1.value in operator_one.keys():
+        return operator_one[arg1.value](arg1.left, x_value)
+    else:
+        if arg1.value != 'x':
+            value1 = int(arg1.value)
+        else:
+            value1 = x_value
+    return value1
 def multiplication(arg1, arg2, x_value):
     values = get_values(arg1, arg2, x_value)
     #print("Multiplication:", value1, value2)
@@ -94,8 +109,9 @@ def division(arg1, arg2, x_value):
     #print("Division:", value1, value2)
     return values[0]/values[1]
 
-def square_root():
-    pass
+def square_root(arg1, x_value):
+    value = get_value(arg1, x_value)
+    return math.sqrt(value)
 
 class Node:
     def __init__(self, value):
@@ -139,6 +155,9 @@ if ind2[0] in operator_two:
     operator_list = [root]
     print(operator_list)
     read_str(ind2[1:], operator_list, 2)
+elif ind2[0] in operator_one:
+    operator_list = [root]
+    read_str(ind2[1:], operator_list, 1)
 
 results = []
 for i in list_values[2:]:
