@@ -2,43 +2,43 @@ import csv
 def read_str(ind, list, num_children):
     new_operator_list = []
     children = 0
-    i = 0
+    father = 0
     new_children = 0
     while children < num_children:
         #se inserta el primer elemento como hijo del nodo x
-        if list[0] in operator_two:
-            tree.insert_node(list[i], ind[children])
-            if ind[children] in operator_two:
-                new_operator_list.append(list[i].left)
+        if list[father].value in operator_two.keys():
+            tree.insert_node(list[father], ind[children])
+            if ind[children] in operator_two.keys():
+                new_operator_list.append(list[father].left)
                 new_children += 2
-            elif ind[children] in operator_one:
-                new_operator_list.append(list[i].left)
+            elif ind[children] in operator_one.keys():
+                new_operator_list.append(list[father].left)
                 new_children += 1
             children += 1
             #se inserta el segundo elemento como hijo del nodo x
-            tree.insert_node(list[i], ind[children])
-            if ind[children] in operator_two:
-                new_operator_list.append(list[i].left)
+            tree.insert_node(list[father], ind[children])
+            if ind[children] in operator_two.keys():
+                new_operator_list.append(list[father].right)
                 new_children += 2
-            elif ind[children] in operator_one:
-                new_operator_list.append(list[i].left)
+            elif ind[children] in operator_one.keys():
+                new_operator_list.append(list[father].right)
                 new_children += 1
             children += 1
-            i += 1
+            father += 1
             #si alguno de los elementos es un operador, se incluye en la nueva lista
-        elif list[0] in operator_one:
-            tree.insert_node(list[i], ind[children])
-            if ind[children] in operator_two:
-                new_operator_list.append(list[i].left)
+        elif list[father].value in operator_one.keys():
+            tree.insert_node(list[father], ind[children])
+            if ind[children] in operator_two.keys():
+                new_operator_list.append(list[father].left)
                 new_children += 2
-            elif ind[children] in operator_one:
-                new_operator_list.append(list[i].left)
+            elif ind[children] in operator_one.keys():
+                new_operator_list.append(list[father].left)
                 new_children += 1
             children += 1
-            i += 1
+            father += 1
     if len(new_operator_list) != 0:
         #print("New depth")
-        read_str(ind[2*len(list):], new_operator_list, new_children)
+        read_str(ind[children:], new_operator_list, new_children)
     else:
         return
 
@@ -137,7 +137,8 @@ tree = Tree(root, ind2)
 
 if ind2[0] in operator_two:
     operator_list = [root]
-    read_str(ind2[1:], operator_list)
+    print(operator_list)
+    read_str(ind2[1:], operator_list, 2)
 
 results = []
 for i in list_values[2:]:
