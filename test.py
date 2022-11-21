@@ -5,7 +5,7 @@ list_values = []
 
 def calculate_value(value):
 
-    calculation = (7+2*value)/(3+(6*value+4*(5/value)))
+    calculation = (72+2*value)/(3+(6*value+4*(5/value)))
     print(calculation)
     return math.sqrt(calculation)
 
@@ -24,7 +24,7 @@ file = open('function1.csv', 'a')
 writer = csv.writer(file)
 data = ["X_VALUE", "Y_VALUE"]
 writer.writerow(data)
-writer.writerow(["s/++7*3+2x**6x4/5x"])
+writer.writerow(["s/++?72?*?3?+?2?x**?6?x?4?/?5?x"])
 for i in results:
     data = []
     data.append(i[0])
