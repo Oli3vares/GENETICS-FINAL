@@ -112,7 +112,48 @@ def division(arg1, arg2, x_value):
 def square_root(arg1, x_value):
     value = get_value(arg1, x_value)
     return math.sqrt(value)
+     
+        
+def append_level(root, level=0, list_tree=[]):
+    if root is not None:
+        orden = str(level) + ":" + root.value 
+        list_tree.append(orden)
+        #print(level, root.value)
+        level += 1
+        append_level(root.left, level)
+        append_level(root.right, level)
+        
+    return(list_tree)
 
+
+def return_tree(list_tree):
+    l_tree = []
+    str_tree = ""
+    list_level = []
+    list_value = []
+    
+    for i in range(len(list_tree)):
+        node = list_tree[i].split(', ')
+        l_level = [item.split(':', 1)[0] for item in node]
+        l_value = [item.split(':', 1)[1] for item in node]
+        level = [int(x) for x in l_level]
+        value = "".join(l_value)
+        list_level.append(level[0])
+        list_value.append(value)
+    x = 0
+    while x in list_level:
+        cont = 0
+        for i in list_level:
+            if i == x:
+                l_tree.append(list_value[cont])
+                
+            cont += 1
+        x += 1
+
+    str_tree = "".join(l_tree)
+    return(str_tree)
+    
+        
 class Node:
     def __init__(self, value):
         self.value = value
@@ -138,14 +179,14 @@ operator_one = {"s": square_root}
 
 
 list_values = []
-file = open('function1.csv',newline='')
+file = open('function4.csv',newline='')
 reader = csv.reader(file)
 
 for row in reader:
     if row != []: #Sacamos del CSV los valores necesarios
         list_values.append(row)
 
-print(list_values)
+#print(list_values)
 
 ind2 = list_values[1][0]
 root = Node(ind2[0])
@@ -153,7 +194,7 @@ tree = Tree(root, ind2)
 
 if ind2[0] in operator_two:
     operator_list = [root]
-    print(operator_list)
+    #print(operator_list)
     read_str(ind2[1:], operator_list, 2)
 elif ind2[0] in operator_one:
     operator_list = [root]
@@ -164,3 +205,9 @@ for i in list_values[2:]:
     new_y = calculate_function(root, float(i[0]))
     if float(i[1]) != new_y:
         print("Mal")
+
+        
+l_tree = append_level(tree.root)
+str_tree = return_tree(l_tree)
+print(str_tree)
+
