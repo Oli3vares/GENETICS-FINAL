@@ -225,7 +225,7 @@ class Tree:
         self.str = str
 
     def __str__(self):
-        print(self.root)
+        return str(self.root)
 
     def create_node(self, value):
         return Node(value)
