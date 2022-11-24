@@ -195,14 +195,16 @@ def square_root(arg1, x_value):
     return "False"
 
 
-def append_level(root, level=0, list_tree=[]):
+def append_level(root, level, list_tree):
+    if list_tree is None:
+        list_tree = []
     if root is not None:
         orden = str(level) + ":" + root.value
         list_tree.append(orden)
         # print(level, root.value)
         level += 1
-        append_level(root.left, level)
-        append_level(root.right, level)
+        append_level(root.left, level, list_tree)
+        append_level(root.right, level, list_tree)
 
     return (list_tree)
 
@@ -343,10 +345,10 @@ def crossing(parent1, parent2):
     children2_root = Node(parent2.str[0])
     children2 = Tree(children2_root, parent2.str)
     read_str(parent2.str, [children2_root], 0)
-    print(parent1, children1)
+    print(children1)
     path1 = choose_path(
         children1)  # returns the path to the root of the subtree which is going to be modified, and the string of that subtree
-    print(parent2, children2)
+    print(children2)
     path2 = choose_path(children2)
     modify_children(children1, path1[0][1:], path2[1])  # returns a tree with the modified children
     modify_children(children2, path2[0][1:], path1[1])
@@ -380,7 +382,7 @@ def choose_path(child):
         deviation = choose_deviation(n_root)
         n_root = deviation[0]
         path.append(deviation[1])
-    list_subtree = append_level(n_root)
+    list_subtree = append_level(n_root, 0, None)
     str_subtree = return_tree(list_subtree)
     print(path, str_subtree)
     return path, str_subtree
@@ -435,6 +437,8 @@ def replace_str(ind, list, num_children):
         else:
             new_children = 0
         elem_read = 1
+        list[father].left = None
+        list[father].right = None
     while children < num_children:
         # se inserta el primer elemento como hijo del nodo x
         if list[father].value in operator_two.keys():
@@ -590,8 +594,12 @@ def insert_node(root, node):
 def replace_node(root, node, pos):
     if pos == 0:
         root.left = create_node(node)
+        root.left.left = None
+        root.left.right = None
     else:
         root.right = create_node(node)
+        root.right.left = None
+        root.right.right = None
 
 
 operator_two = {"+": addition, "-": substraction, "*": multiplication, "/": division}
