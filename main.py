@@ -194,6 +194,41 @@ def square_root(arg1, x_value):
         print("Negative sqrt")
     return "False"
 
+"""
+def exponential(arg1, x_value):
+    # y = e^x
+    value = get_values(arg1, x_value)
+    if value != "False":
+        if value >= 5:
+            return math.exp(value)
+        print("Math range error")
+    return "False"
+"""
+
+def logarithm(arg1, x_value):
+    value = get_values(arg1, x_value)
+    if value != "False":
+        if value >= 0:
+            return math.log(value)
+        print("Negative log")
+    return "False"
+
+
+def sine(arg1, x_value):
+    value = get_values(arg1, x_value)
+    # print("Arg1s", arg1)
+    if value != "False":
+        return math.sin(value)
+    return "False"
+
+
+def cosine(arg1, x_value):
+    value = get_values(arg1, x_value)
+    # print("Arg1s", arg1)
+    if value != "False":
+        return math.cos(value)
+    return "False"
+
 
 def append_level(root, level, list_tree):
     if list_tree is None:
@@ -603,8 +638,8 @@ def replace_node(root, node, pos):
 
 
 operator_two = {"+": addition, "-": substraction, "*": multiplication, "/": division}
-operator_one = {"s": square_root}
-all_operators = ["+", "-", "*", "/", "s"]
+operator_one = {"r": square_root, "l": logarithm, "s": sine, "c": cosine}
+all_operators = ["+", "-", "*", "/", "r", "l", "s", "c"]
 
 population = generate_initial_population(SIZE, 4, "a")
 j = 0
