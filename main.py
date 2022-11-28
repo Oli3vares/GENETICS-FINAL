@@ -208,7 +208,7 @@ def exponential(arg1, x_value):
 def logarithm(arg1, x_value):
     value = get_values(arg1, x_value)
     if value != "False":
-        if value >= 0:
+        if value <= 0:
             return math.log(value)
         print("Negative log")
     return "False"
