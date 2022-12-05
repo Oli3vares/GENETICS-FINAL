@@ -4,8 +4,9 @@ import random
 import time
 
 NUMBERS_RANGE = 1000
-TOURNAMENT_PROB = 0.5
-SIZE = 2
+TOURNAMENT_PROB = 0.04
+SIZE = 200
+MUTATION_PROB = 0.1
 
 
 def check_valid(ind):
@@ -181,7 +182,7 @@ def division(arg1, arg2, x_value):
     if not "False" in values:
         if values[1] != 0:
             return values[0] / values[1]
-        print("Division by zero")
+        #print("Division by zero")
     return "False"
 
 
@@ -191,25 +192,35 @@ def square_root(arg1, x_value):
     if value != "False":
         if value >= 0:
             return math.sqrt(value)
-        print("Negative sqrt")
+        #print("Negative sqrt")
     return "False"
 
-"""
-def exponential(arg1, x_value):
+
+def power(arg1, arg2, x_value):
     # y = e^x
-    value = get_values(arg1, x_value)
-    if value != "False":
-        if value >= 5:
-            return math.exp(value)
+    values = get_values(arg1, x_value, arg2)
+    
+    if not "False" in values:
+        try:
+            values[0] ** values[1]
+        except:
+            ValueError()
+        else:
+            return values[0] ** values[1]
         print("Math range error")
     return "False"
-"""
+
 
 def logarithm(arg1, x_value):
     value = get_values(arg1, x_value)
     if value != "False":
         if value <= 0:
-            return math.log(value)
+            try:
+                math.log(value)
+            except:
+                ValueError()
+            else:
+                return math.log(value)
         print("Negative log")
     return "False"
 
@@ -331,7 +342,7 @@ def calculate_error(individual_root):
         if row[0] != "x":
             ind_result = calculate_function(individual_root, int(row[0]))
             if ind_result == "False":
-                print("Individual not valid")
+                #print("Individual not valid")
                 return "Not valid"
             cumulative_error += abs(ind_result - int(row[1]))
 
@@ -343,7 +354,6 @@ def choose_fighters(population):
     fighters = []
     numbers = []
     num_fighters = SIZE * TOURNAMENT_PROB
-    print(num_fighters)
     while chosen_fighters < num_fighters:
         chosen = "a"
         # print(numbers)
@@ -365,7 +375,7 @@ def get_error(fighter):
 def choose_parents(population):
     parent1 = min(choose_fighters(population), key=get_error)
     chosen = "A"
-    print("Chosen")
+    #print("Chosen")
     while chosen != "Chosen":
         parent2 = min(choose_fighters(population), key=get_error)
         if parent2[0].str != parent1[0].str:
@@ -380,16 +390,20 @@ def crossing(parent1, parent2):
     children2_root = Node(parent2.str[0])
     children2 = Tree(children2_root, parent2.str)
     read_str(parent2.str, [children2_root], 0)
-    print(children1)
+    #print(children1)
     path1 = choose_path(
         children1)  # returns the path to the root of the subtree which is going to be modified, and the string of that subtree
-    print(children2)
+    #print(children2)
     path2 = choose_path(children2)
     modify_children(children1, path1[0][1:], path2[1])  # returns a tree with the modified children
     modify_children(children2, path2[0][1:], path1[1])
+    list_subtree = append_level(children1.root, 0, None)
+    children1.str = return_tree(list_subtree)
+    list_subtree = append_level(children2.root, 0, None)
+    children2.str = return_tree(list_subtree)
     # print("Parents\n", parent1, parent2)
     # print("Children\n",children1, children2)
-    print(children1, children2)
+    #print(children1, children2)
     return children1, children2
 
 
@@ -398,28 +412,28 @@ def choose_path(child):
     list_subtree = None
     str_subtree = None
     if child.root.right is not None:
-        print("a")
+        #print("a")
         if random.randint(0, 1):
-            print("a1", child.root.left.value)
+            #print("a1", child.root.left.value)
             path.append("L")
             n_root = child.root.left
         else:
-            print("a2", child.root.right.value)
+            #print("a2", child.root.right.value)
             path.append("R")
             n_root = child.root.right
     else:
-        print("b", child.root.left)
+        #print("b", child.root.left)
         path.append("L")
-        print(child)
+        #print(child)
         n_root = child.root.left
     while path[-1] != "S":
-        print("Entered")
+        #print("Entered")
         deviation = choose_deviation(n_root)
         n_root = deviation[0]
         path.append(deviation[1])
     list_subtree = append_level(n_root, 0, None)
     str_subtree = return_tree(list_subtree)
-    print(path, str_subtree)
+    #print(path, str_subtree)
     return path, str_subtree
 
 
@@ -451,7 +465,16 @@ def modify_children(children, path, string):
             root = root.left
         else:
             root = root.right
-    root.value = string[0]
+    if string[0] != "?":
+        root.value = string[0]
+    else:
+        i = 1
+        finished = False
+        while not finished:
+            if string[i] == "?":
+                finished = True
+            i += 1
+        root.value = string[:i]
     replace_str(string, [root], 0)
     return
 
@@ -524,18 +547,29 @@ def pairing(population):
 def mutate(population):
     new_population = []
     for i in population:
-        mutated_tree = mutation_non_terminal_simple(i)
-        new_population.append(mutated_tree)
+        if random.random() <= MUTATION_PROB/2:
+            mutated_tree = mutation_non_terminal_simple(i)
+            list_subtree = append_level(mutated_tree.root, 0, None)
+            mutated_tree.str = return_tree(list_subtree)
+            new_population.append(mutated_tree)
+        elif random.random() <= MUTATION_PROB:
+            mutated_tree = mutation_terminal_simple(i)
+            list_subtree = append_level(mutated_tree.root, 0, None)
+            mutated_tree.str = return_tree(list_subtree)
+            new_population.append(mutated_tree)
+        else:
+            new_population.append(i)
+
     return new_population
 
 
 def mutation_terminal_simple(tree):
-    print("Not mutated", tree)
+    #print("Not mutated", tree)
     node = tree.root
     terminal_chosen = False
     while not terminal_chosen:
         if node.left is None:
-            print(node.value)
+            #print(node.value)
             terminal_chosen = True
         elif node.right is None:
             node = node.left
@@ -549,12 +583,12 @@ def mutation_terminal_simple(tree):
     else:
         number = random.randint(1, NUMBERS_RANGE)
         node.value = "?" + str(number) + "?"
-    print("Mutated", tree)
+    #print("Mutated", tree)
     return tree
 
 
 def mutation_non_terminal_simple(tree):
-    print("Not mutated", tree)
+    #print("Not mutated", tree)
     non_terminal_chosen = False
     while not non_terminal_chosen:
         node = tree.root
@@ -564,7 +598,7 @@ def mutation_non_terminal_simple(tree):
                 terminal_chosen = True
             elif node.right is None:
                 if random.randint(0, 1):
-                    print("Value to mutate v1", node.value)
+                    #print("Value to mutate v1", node.value)
                     terminal_chosen = True
                     non_terminal_chosen = True
                 else:
@@ -575,18 +609,28 @@ def mutation_non_terminal_simple(tree):
                 elif random.randint(0, 2) == 1:
                     node = node.right
                 else:
-                    print("Value to mutate", node.value)
+                    #print("Value to mutate", node.value)
                     terminal_chosen = True
                     non_terminal_chosen = True
+    chosen = False
     if node.value in operator_two.keys():
-        new_op = random.choice(all_operators)
-        if new_op in operator_one.keys():
-            node.right = None
-        node.value = new_op
+        while not chosen:
+            #print("new_op",random.choice(list(operator_two.keys())))
+            new_op = random.choice(list(operator_two.keys()))
+            if new_op != node.value:
+                chosen = True
+                
+    if node.value in operator_one.keys():
+        while not chosen:
+            new_op = random.choice(list(operator_two.keys()))
+            if new_op != node.value:
+                chosen = True
+                
     else:
         pass
         # print("Can´t mutate (og non_terminal sqrt, no other one child operator)")
-
+    #print("NO", new_op)
+    node.value = new_op
     print("Mutated", tree)
     return tree
 
@@ -637,15 +681,22 @@ def replace_node(root, node, pos):
         root.right.right = None
 
 
-operator_two = {"+": addition, "-": substraction, "*": multiplication, "/": division}
-operator_one = {"r": square_root, "l": logarithm, "s": sine, "c": cosine}
-all_operators = ["+", "-", "*", "/", "r", "l", "s", "c"]
+operator_two = {"+": addition, "-": substraction, "*": multiplication, "/": division, "p": power}
+operator_one = {"r": square_root, "s": sine, "c": cosine, "l": logarithm}
+all_operators = ["+", "-", "*", "/", "r", "s", "c"]
 
 population = generate_initial_population(SIZE, 4, "a")
+
+new_ind = "/x?10?"
+new_root = Node(new_ind[0])
+new_tree = Tree(new_root, new_ind)
+replace_str(new_ind, [new_root], 0)
+#print(calculate_error(new_tree.root))
+
 j = 0
 incorrect = 0
 while j < len(population):
-    # print(population[j].str)
+    #print(population[j].str)
     result = calculate_error(population[j].root)
     if result == "Not valid":
         population.remove(population[j])
@@ -659,7 +710,37 @@ while j < len(population):
     else:
         population[j] = [population[j], result]
         j += 1
-        # print(result)
-print(len(population))
-new_pop = pairing(population)
-mutated_pop = mutate(new_pop)
+        #print(result)
+
+while True:
+    j = 0
+    incorrect = 0
+    population = pairing(population)
+    population = mutate(population)
+    while j < len(population):
+        # print(population[j].str)
+        #print(j, population[j].str, population[j])
+        result = calculate_error(population[j].root)
+        if result == "Not valid":
+            population.remove(population[j])
+            new_ind = generate_individual(4)
+            new_root = Node(new_ind[0])
+            new_tree = Tree(new_root, new_ind)
+            # print("new ind")
+            population.append(new_tree)
+            read_str(new_ind, [new_root], 0)
+            incorrect += 1
+        else:
+            population[j] = [population[j], result]
+            j += 1
+            # print(result)
+    # print(population)
+    best_ind = min(population, key=get_error)
+    print("Best value", best_ind[1], incorrect)
+    #print(len(population))
+
+
+
+
+
+
